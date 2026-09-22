@@ -2,28 +2,23 @@ package rgx
 
 import "testing"
 
-func TestLiteralStateGraph(t *testing.T) {
-	end := &State{
-		terminal: true,
-		transitions: make(map[uint8][]*State),
-	}
-
-	start := &State{
-		transitions: make(map[uint8][]*State),
-	}
-
-	start.transitions['a'] = []*State{end}
+func TestLiteralFragment(t *testing.T) {
+	start, end := literalFragment('a')
 	destinations := start.transitions['a']
 
 	if len(destinations) != 1 {
-		t.Fatalf("Expected 1 destination, got %d\n", len(destinations))
+		t.Fatalf("expected 1 destination, got %d", len(destinations))
 	}
 
 	if destinations[0] != end {
-		t.Fatal("Transition does not lead to expected state")
+		t.Fatal("transition does not lead to expected state")
 	}
 
-	if !destinations[0].terminal {
-		t.Fatal("Destination should be terminal")
+	if end.terminal {
+		t.Fatal("fragment end should not be terminal before completion")
+	}
+
+	if start.transitions == nil || end.transitions == nil {
+		t.Fatal("fragment states should have initialized transition maps")
 	}
 }
