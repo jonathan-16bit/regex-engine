@@ -22,3 +22,19 @@ func concatenate(leftStart, leftEnd, rightStart, rightEnd *State) (*State, *Stat
 	leftEnd.transitions[epsilon] = append(leftEnd.transitions[epsilon], rightStart)
 	return leftStart, rightEnd
 }
+
+func alternate(leftStart, leftEnd, rightStart, rightEnd *State) (*State, *State) {
+	start := &State{
+		transitions: make(map[uint8][]*State),
+	}
+
+	end := &State{
+		transitions: make(map[uint8][]*State),
+	}
+
+	start.transitions[epsilon] = []*State{leftStart, rightStart}
+	leftEnd.transitions[epsilon] = append(leftEnd.transitions[epsilon], end)
+	rightEnd.transitions[epsilon] = append(rightEnd.transitions[epsilon], end)
+
+	return start, end
+}
