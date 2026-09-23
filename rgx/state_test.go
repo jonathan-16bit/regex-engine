@@ -1,6 +1,7 @@
 package rgx
 
 import "testing"
+import "slices"
 
 func TestLiteralFragment(t *testing.T) {
 	start, end := literalFragment('a')
@@ -52,12 +53,57 @@ func TestConcatenateFragments(t *testing.T) {
 		t.Fatal("transition on 'epsilon' from aEnd fails")
 	}
 
-	
 	bDestinations := bStart.transitions['b']
 	if len(bDestinations) != 1 {
 		t.Fatalf("expected 1 'b' destination, got %d", len(bDestinations))
 	}
 	if bDestinations[0] != bEnd {
 		t.Fatal("transition on 'b' from bStart fails")
+	}
+}
+
+func TestAlternateFragments(t *testing.T) {
+	aStart, aEnd := literalFragment('a')
+	bStart, bEnd := literalFragment('b')
+	start, end := alternate(aStart, aEnd, bStart, bEnd)
+
+	foundLeft := false
+	foundRight := false
+
+	if len(start.transitions[epsilon]) != 2 {
+		t.Fatalf("2 epsilon transitions expected, %v found", len(start.transitions[epsilon]))
+	}
+
+	for _, destination := range start.transitions[epsilon] {
+		if destination == aStart {
+			foundLeft = true
+		}
+		if destination == bStart {
+			foundRight = true
+		}
+	}
+
+	if foundLeft == false {
+		t.Fatalf("start of a is not connected to alternate")
+	}
+
+	if foundRight == false {
+		t.Fatalf("start of b is not connected to alternate")
+	}
+
+	if !slices.Contains(aEnd.transitions[epsilon], end) {
+		t.Fatalf("no transition from aEnd to end")
+	}
+
+	if !slices.Contains(bEnd.transitions[epsilon], end) {
+		t.Fatalf("no transition from bEnd to end")
+	}
+
+	if end.transitions == nil {
+		t.Fatal("alternation end should have an initialized transition map")
+	}
+
+	if end.terminal {
+		t.Fatal("alternation end should not be terminal before completion")
 	}
 }
