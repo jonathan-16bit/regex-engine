@@ -87,3 +87,30 @@ func TestAcceptsEpsilonCycle(t *testing.T) {
 		t.Fatal("accepting epsilon cycle should accept")
 	}
 }
+
+func TestAcceptsKleeneStar(t *testing.T) {
+	aStart, aEnd := literalFragment('a')
+	start, end := kleeneStar(aStart, aEnd)
+	end.terminal = true
+
+	tests := []struct {
+		input string
+		want  bool
+	}{
+		{input: "", want: true},
+		{input: "a", want: true},
+		{input: "aa", want: true},
+		{input: "b", want: false},
+		{input: "ab", want: false},
+		{input: "ba", want: false},
+		{input: "aaaab", want: false},
+	}
+
+	for _, test := range tests {
+		got := accepts(start, test.input)
+
+		if got != test.want {
+			t.Errorf("accepts(%q) = %v; want %v", test.input, got, test.want)
+		}
+	}
+}
