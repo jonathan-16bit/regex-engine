@@ -57,3 +57,33 @@ func TestAcceptsAlternation(t *testing.T) {
 		}
 	}
 }
+
+func TestAcceptsEpsilonCycle(t *testing.T) {
+	// First test
+	q0 := &State{
+		transitions: make(map[uint8][]*State),
+	}
+
+	q1 := &State{
+		transitions: make(map[uint8][]*State),
+	}
+
+	q0.transitions[epsilon] = []*State{q1}
+	q1.transitions[epsilon] = []*State{q0}
+
+	// Test
+	if accepts(q0, "") {
+		t.Fatal("non-accepting epsilon cycle should reject")
+	}
+
+	terminal := &State{
+		terminal: true,
+		transitions: make(map[uint8][]*State),
+	}
+
+	q1.transitions[epsilon] = append(q1.transitions[epsilon], terminal)
+
+	if !accepts(q0, "") {
+		t.Fatal("accepting epsilon cycle should accept")
+	}
+}
