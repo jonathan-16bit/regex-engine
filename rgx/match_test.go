@@ -30,3 +30,30 @@ func TestAcceptsConcatenatedLiterals(t *testing.T) {
 		}
 	}
 }
+
+func TestAcceptsAlternation(t *testing.T) {
+	aStart, aEnd := literalFragment('a')
+	bStart, bEnd := literalFragment('b')
+
+	start, end := alternate(aStart, aEnd, bStart, bEnd)
+	end.terminal = true
+
+	tests := []struct {
+		input string
+		want  bool
+	}{
+		{input: "a", want: true},
+		{input: "b", want: true},
+		{input: "", want: false},
+		{input: "ab", want: false},
+		{input: "c", want: false},
+	}
+
+	for _, test := range tests {
+		got := accepts(start, test.input)
+
+		if got != test.want {
+			t.Errorf("accepts(%q) = %v; want %v", test.input, got, test.want)
+		}
+	}
+}
