@@ -38,3 +38,18 @@ func alternate(leftStart, leftEnd, rightStart, rightEnd *State) (*State, *State)
 
 	return start, end
 }
+
+func kleeneStar(innerStart, innerEnd *State) (*State, *State){
+	newStart := &State {
+		transitions: make(map[uint8][]*State),
+	}
+
+	newEnd := &State {
+		transitions: make(map[uint8][]*State),
+	}
+
+	newStart.transitions[epsilon] = append(newStart.transitions[epsilon], innerStart, newEnd)
+	innerEnd.transitions[epsilon] = append(innerEnd.transitions[epsilon], innerStart, newEnd)
+
+	return newStart, newEnd
+}
