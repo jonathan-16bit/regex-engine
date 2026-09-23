@@ -107,3 +107,51 @@ func TestAlternateFragments(t *testing.T) {
 		t.Fatal("alternation end should not be terminal before completion")
 	}
 }
+
+func TestKleeneStarFragment(t *testing.T) {
+	aStart, aEnd := literalFragment('a')
+	newStart, newEnd := kleeneStar(aStart, aEnd);
+
+	// Epsilon transitions from newStart
+	newStartEpsilonTransitions := newStart.transitions[epsilon]
+	if len(newStartEpsilonTransitions) != 2 {
+		t.Fatalf("expected 2 epsilon transitions from newStart, got %v", len(newStartEpsilonTransitions))
+	}
+
+	if !slices.Contains(newStartEpsilonTransitions, aStart) {
+		t.Fatal("aStart is unreachable from newStart")
+	}
+
+	if !slices.Contains(newStartEpsilonTransitions, newEnd) {
+		t.Fatal("newEnd is unreachable from newStart")
+	}
+
+	// Epsilon transitions from aEnd
+	aEndEpsilonTransitions := aEnd.transitions[epsilon]
+	if len(aEndEpsilonTransitions) != 2 {
+		t.Fatalf("expected 2 epsilon transitions from aEnd, got %v", len(aEndEpsilonTransitions))
+	}
+
+	if !slices.Contains(aEndEpsilonTransitions, aStart) {
+		t.Fatal("aStart unreachable from aEnd")
+	}
+
+	if !slices.Contains(aEndEpsilonTransitions, newEnd) {
+		t.Fatal("newEnd unreachable from aEnd")
+	}
+
+	// No epsilon transition from aStart to aEnd
+	if len(aStart.transitions[epsilon]) != 0 {
+		t.Fatal("aStart has epsilon transition to aEnd")
+	}
+
+	// newEnd has an initialized map
+	if newEnd.transitions == nil {
+		t.Fatal("newEnd has uninitialized map")
+	}
+
+	// newEnd must not be terminal
+	if newEnd.terminal {
+		t.Fatal("newEnd is terminal")
+	}
+}
