@@ -3,7 +3,6 @@ package rgx
 import "testing"
 
 func TestParsePrimaryLiteral(t *testing.T) {
-	// First test
 	p := parser{
 		tokens: tokenize("a"),
 	}
@@ -28,5 +27,30 @@ func TestParsePrimaryLiteral(t *testing.T) {
 
 	if expr.literal != 'a' {
 		t.Fatalf("expected literal 'a', got %v", expr.literal)
+	}
+}
+
+func TestParsePrimaryRejectStar(t *testing.T) {
+	p := parser{
+		tokens: tokenize("*"),
+	}
+
+	initialPos := p.pos
+	expr, err := p.parsePrimary()
+
+	if err == nil {
+		t.Fatal("expected parsePrimary to return error for tokenStar")
+	}
+
+	if expr != nil {
+		t.Fatalf("expected parsePrimary to not return expression, got %+v", expr)
+	}
+
+	if p.pos != initialPos {
+		t.Fatalf("expected parser position %v, got %v", initialPos, p.pos)
+	}
+
+	if p.current().kind != tokenStar {
+		t.Fatalf("expected current token to remain tokenStar, got %v", p.current())
 	}
 }
