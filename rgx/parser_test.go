@@ -4,7 +4,7 @@ import "testing"
 
 func TestParsePrimaryLiteral(t *testing.T) {
 	// First test
-	p := parser {
+	p := parser{
 		tokens: tokenize("a"),
 	}
 
@@ -12,6 +12,10 @@ func TestParsePrimaryLiteral(t *testing.T) {
 
 	if err != nil {
 		t.Fatalf("parsePrimary returned an unexpected error: %v", err)
+	}
+
+	if p.current().kind != tokenEOF {
+		t.Fatalf("expected tokenEOF after parsing literal, got %v", p.current())
 	}
 
 	if expr == nil {
