@@ -54,3 +54,39 @@ func TestParsePrimaryRejectStar(t *testing.T) {
 		t.Fatalf("expected current token to remain tokenStar, got %v", p.current())
 	}
 }
+
+func TestParseRepetitionStar(t *testing.T) {
+	p := parser{
+		tokens: tokenize("a*"),
+	}
+
+	expr, err := p.parseRepetition()
+	if err != nil {
+		t.Fatalf("expected no error, got %+v", err)
+	}
+
+	if expr == nil {
+		t.Fatalf("expected valid expression, got %+v", expr)
+	}
+
+	if expr.kind != expressionStar {
+		t.Fatalf("expected kind expressionStar, got %v", expr.kind)
+	}
+
+	if expr.child == nil {
+		t.Fatal("expected valid child expression, got nil")
+	}
+
+	if expr.child.kind != expressionLiteral {
+		t.Fatalf("expected expressionLiteral child kind, got %v", expr.child.kind)
+	}
+
+	if expr.child.literal != 'a' {
+		t.Fatalf("expected child 'a', got %v", expr.child.literal)
+	}
+
+	curr := p.current()
+	if curr.kind != tokenEOF {
+		t.Fatalf("expected tokenEOF, got %v", curr)
+	}
+}
