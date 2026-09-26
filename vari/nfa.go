@@ -1,4 +1,4 @@
-package rgx
+package vari
 
 // Special transition key
 const epsilon uint8 = 0

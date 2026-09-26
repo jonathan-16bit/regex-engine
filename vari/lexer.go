@@ -1,4 +1,4 @@
-package rgx
+package vari
 
 func tokenize(pattern string) []token {
 	tokens := make([]token, 0, len(pattern)+1)

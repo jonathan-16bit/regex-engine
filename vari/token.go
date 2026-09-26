@@ -1,4 +1,4 @@
-package rgx
+package vari
 
 type tokenKind uint8
 

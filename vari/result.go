@@ -1,4 +1,4 @@
-package rgx
+package vari
 
 type Result struct {
 	Matches bool // Acceptance
