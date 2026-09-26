@@ -77,7 +77,7 @@ func TestAcceptsEpsilonCycle(t *testing.T) {
 	}
 
 	terminal := &State{
-		terminal: true,
+		terminal:    true,
 		transitions: make(map[uint8][]*State),
 	}
 

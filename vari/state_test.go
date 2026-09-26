@@ -110,7 +110,7 @@ func TestAlternateFragments(t *testing.T) {
 
 func TestKleeneStarFragment(t *testing.T) {
 	aStart, aEnd := literalFragment('a')
-	newStart, newEnd := kleeneStar(aStart, aEnd);
+	newStart, newEnd := kleeneStar(aStart, aEnd)
 
 	// Epsilon transitions from newStart
 	newStartEpsilonTransitions := newStart.transitions[epsilon]

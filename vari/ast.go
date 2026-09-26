@@ -1,6 +1,7 @@
 package vari
 
 type expressionKind uint8
+
 const (
 	expressionInvalid expressionKind = iota
 	expressionLiteral
@@ -10,9 +11,9 @@ const (
 )
 
 type expression struct {
-	kind expressionKind
+	kind    expressionKind
 	literal uint8
-	child *expression
-	left *expression
-	right *expression
+	child   *expression
+	left    *expression
+	right   *expression
 }

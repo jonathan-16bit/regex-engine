@@ -4,7 +4,7 @@ import "fmt"
 
 type parser struct {
 	tokens []token
-	pos int
+	pos    int
 }
 
 // Method receiver
@@ -26,13 +26,13 @@ func (p *parser) parsePrimary() (*expression, error) {
 	switch current.kind {
 	case tokenLiteral:
 		p.advance()
-		return &expression {
-			kind: expressionLiteral,
+		return &expression{
+			kind:    expressionLiteral,
 			literal: current.ch,
 		}, nil
 
 	default:
-		return nil, fmt.Errorf (
+		return nil, fmt.Errorf(
 			"expected expression at position %d", current.pos,
 		)
 	}
