@@ -20,6 +20,7 @@ func (p *parser) advance() token {
 	return curr
 }
 
+// Parse literals for now
 func (p *parser) parsePrimary() (*expression, error) {
 	current := p.current()
 
@@ -35,5 +36,27 @@ func (p *parser) parsePrimary() (*expression, error) {
 		return nil, fmt.Errorf(
 			"expected expression at position %d", current.pos,
 		)
+	}
+}
+
+// Kleene star
+func (p *parser) parseRepetition() (*expression, error) {
+	childExp, err := p.parsePrimary()
+
+	if err != nil {
+		return nil, err
+	}
+
+	current := p.current()
+	switch current.kind {
+	case tokenStar:
+		p.advance()
+		return &expression{
+			kind:  expressionStar,
+			child: childExp,
+		}, nil
+
+	default:
+		return childExp, nil
 	}
 }
